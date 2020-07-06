@@ -1,10 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
         id="cordova-plugin-bluetooth-printer" 
-        version="1.0.2">
-    <engines>
-        <engine name="cordova" version=">=6.5.0" />
-    </engines>
+        version="1.0.3">
+   
 
     <name>BluetoothPrinter</name>
     <description>Cordova Bluetooth Printer Plugin</description>
