@@ -619,7 +619,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                     //结束循环时
                     MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.getCutPaperCmd());
                 }
-                MKBluetoothPrinter.printText("\n");
+                //MKBluetoothPrinter.printText("\n");
 
 
         } catch (Exception e) {
