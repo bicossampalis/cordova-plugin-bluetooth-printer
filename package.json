@@ -1,0 +1,58 @@
+{
+  "_from": "@lynzz/cordova-plugin-bluetooth-printer",
+  "_id": "@lynzz/cordova-plugin-bluetooth-printer@1.0.7",
+  "_inBundle": false,
+  "_integrity": "sha512-xreN8uAkcHx3KuOl4y2wz49f2zr7PCltE538MTef27AfH/cp5vUbh0qtKnUfFrSv8FtZsmEy2hlYtSSGY8qaRw==",
+  "_location": "/@lynzz/cordova-plugin-bluetooth-printer",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@lynzz/cordova-plugin-bluetooth-printer",
+    "name": "@lynzz/cordova-plugin-bluetooth-printer",
+    "escapedName": "@lynzz%2fcordova-plugin-bluetooth-printer",
+    "scope": "@lynzz",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@lynzz/cordova-plugin-bluetooth-printer/-/cordova-plugin-bluetooth-printer-1.0.7.tgz",
+  "_shasum": "2303a49dcd9aa2b837767b685e2941c4ce41eca0",
+  "_spec": "@lynzz/cordova-plugin-bluetooth-printer",
+  "_where": "C:\\Users\\s.fotineas",
+  "author": {
+    "name": "lynzz"
+  },
+  "bugs": {
+    "url": "https://github.com/lynzz/BluetoothPrinter/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-bluetooth-printer",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "deprecated": false,
+  "description": "cordova bluetooth printer plugin",
+  "homepage": "https://github.com/lynzz/BluetoothPrinter#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova",
+    "cordova-ios"
+  ],
+  "license": "MIT",
+  "name": "@lynzz/cordova-plugin-bluetooth-printer",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lynzz/BluetoothPrinter.git"
+  },
+  "scripts": {
+    "pub": "npm publish --registry=http://registry.npmjs.org --access=public"
+  },
+  "version": "1.0.7"
+}
