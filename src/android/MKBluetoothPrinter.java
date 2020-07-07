@@ -429,7 +429,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                        MKBluetoothPrinter.printText("\n");
                    }
                    //结束循环时
-                    MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.getCutPaperCmd());
+                   // MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.getCutPaperCmd());
 //                     JSONObject dataJson = new JSONObject(sendData);
 //                   ///获取globalDatatop数据
 //                   JSONArray top_array = dataJson.optJSONArray("globalDatatop");
