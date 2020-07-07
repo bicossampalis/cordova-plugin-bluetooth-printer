@@ -767,7 +767,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         }
     }
 	
-	 public static void printImage2(int[] argb, int width, int height, int align, boolean dither, boolean crop) {
+	 public static void printImage2(int[] argb, int width, int height, int align, boolean dither, boolean crop) throws IOException {
 		
 		 
         Object buf = null;
