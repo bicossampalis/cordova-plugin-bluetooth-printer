@@ -505,6 +505,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                 int aligmentType = jsonData.optInt("aligmentType");
                 int isTitle = jsonData.optInt("isTitle");
                 int maxWidth = jsonData.optInt("maxWidth");
+				 int maxHeight = jsonData.optInt("maxHeight");
                 int qrCodeSize = jsonData.optInt("qrCodeSize");
                 JSONArray textArray = jsonData.optJSONArray("textArray");
 
@@ -618,6 +619,9 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                 }else if(infoType == 8) {
                     //结束循环时
                     MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.getCutPaperCmd());
+                }else if(infoType == 9) {
+                     text = text.replace("data:image/jpeg;base64,", "").replace("data:image/png;base64,", "");
+                   printImage(text);
                 }
                 MKBluetoothPrinter.printText("\n");
 
@@ -678,6 +682,110 @@ public class MKBluetoothPrinter extends CordovaPlugin {
             return b;
         }
         return 0;
+    }
+	
+	 private static void convertARGBToGrayscale(int[] argb, int width, int height) {
+        int pixels = width * height;
+
+        for(int i = 0; i < pixels; ++i) {
+            int r = argb[i] >> 16 & 255;
+            int g = argb[i] >> 8 & 255;
+            int b = argb[i] & 255;
+            int color = r * 19 + g * 38 + b * 7 >> 6 & 255;
+            argb[i] = color;
+        }
+
+    }
+	
+	 public void printImage(String image, int width, int height, int align) {
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inScaled = false;
+            byte[] decodedByte = Base64.decode(image, 0);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+            final int imgWidth = bitmap.getWidth();
+            final int imgHeight = bitmap.getHeight();
+            final int[] argb = new int[imgWidth * imgHeight];
+
+            bitmap.getPixels(argb, 0, imgWidth, 0, 0, imgWidth, imgHeight);
+			
+			//bitmap =compressPic(bitmap);
+			
+            bitmap.recycle();
+
+            printImage2(argb, width, height, align, true);
+              outputStream.flush();
+            //mCallbackContext.success();
+        } catch (Exception e) {
+            // e.printStackTrace();
+            // mCallbackContext.error(this.getErrorByCode(11, e));
+        }
+    }
+	
+	 public void printImage2(int[] argb, int width, int height, int align, boolean dither, boolean crop) throws IOException {
+		
+		 
+        Object buf = null;
+        boolean bufOffs = false;
+        if(argb == null) {
+            throw new NullPointerException("The argb is null");
+        } else if(align >= 0 && align <= 2) {
+            if(width >= 1 && height >= 1) {
+                convertARGBToGrayscale(argb, width, height);
+                // if(dither) {
+                    // ditherImageByFloydSteinberg(argb, width, height);
+                // }
+
+                // if(crop) {
+                    // height = this.cropImage(argb, width, height);
+                // }
+
+                byte[] var14 = new byte[width * 3 + 9];
+               
+                    byte var15 = 0;
+                    int var16 = var15 + 1;
+                    var14[var15] = 27;
+                    var14[var16++] = 51;
+                    var14[var16++] = 24;
+					  outputStream.write(var14, 0, var16);
+                    //this.write(var14, 0, var16);
+                    var15 = 0;
+                    var16 = var15 + 1;
+                    var14[var15] = 27;
+                    var14[var16++] = 97;
+                    var14[var16++] = (byte)align;
+                    var14[var16++] = 27;
+                    var14[var16++] = 42;
+                    var14[var16++] = 33;
+                    var14[var16++] = (byte)(width % 256);
+                    var14[var16++] = (byte)(width / 256);
+                    var14[var14.length - 1] = 10;
+                    int j = 0;
+
+                    for(int offs = 0; j < height; ++j) {
+                        int i;
+                        if(j > 0 && j % 24 == 0) {
+                            //this.write(var14);
+							outputStream.write(var14);
+                            for(i = var16; i < var14.length - 1; ++i) {
+                                var14[i] = 0;
+                            }
+                        }
+
+                        for(i = 0; i < width; ++offs) {
+                            var14[var16 + i * 3 + j % 24 / 8] |= (byte)((argb[offs] < 128?1:0) << 7 - j % 8);
+                            ++i;
+                        }
+                    }
+					outputStream.write(var14);
+                    //this.write(var14);
+                
+            } else {
+                throw new IllegalArgumentException("The size of image is illegal");
+            }
+        } else {
+            throw new IllegalArgumentException("The align is illegal");
+        }
     }
 
     /**
