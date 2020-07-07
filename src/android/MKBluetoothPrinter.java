@@ -621,7 +621,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                     MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.getCutPaperCmd());
                 }else if(infoType == 9) {
                      text = text.replace("data:image/jpeg;base64,", "").replace("data:image/png;base64,", "");
-                   MKBluetoothPrinter.printImage(text);
+                   printImage(text,maxWidth,maxHeight,aligmentType);
                 }
                 MKBluetoothPrinter.printText("\n");
 
@@ -713,7 +713,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
 			
             bitmap.recycle();
 
-            MKBluetoothPrinter.printImage2(argb, width, height, align, true);
+            printImage2(argb, width, height, align, true);
               outputStream.flush();
             //mCallbackContext.success();
         } catch (Exception e) {
@@ -722,16 +722,16 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         }
     }
 	
-	 public static void printImage2(int[] argb, int width, int height, int align, boolean dither, boolean crop) throws IOException {
+	 public static void printImage2(int[] argb, int width, int height, int align, boolean dither, boolean crop) {
 		
 		 
         Object buf = null;
         boolean bufOffs = false;
         if(argb == null) {
-            throw new NullPointerException("The argb is null");
+            //throw new NullPointerException("The argb is null");
         } else if(align >= 0 && align <= 2) {
             if(width >= 1 && height >= 1) {
-                MKBluetoothPrinter.convertARGBToGrayscale(argb, width, height);
+                convertARGBToGrayscale(argb, width, height);
                 // if(dither) {
                     // ditherImageByFloydSteinberg(argb, width, height);
                 // }
