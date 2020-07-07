@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
         id="cordova-plugin-bluetooth-printer" 
-        version="1.0.13">
+        version="1.0.14">
    
 
     <name>BluetoothPrinter</name>

@@ -576,7 +576,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
 
 
-                   // bitmap =compressPic(bitmap);
+                    bitmap =compressPic(bitmap);
 
                     if(bitmap!=null) {
                         //图片的长和框必须是大于24*size
