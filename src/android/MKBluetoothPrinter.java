@@ -697,7 +697,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
 
     }
 	
-	 public void printImage(String image, int width, int height, int align) {
+	 public static void printImage(String image, int width, int height, int align) {
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = false;
@@ -722,7 +722,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         }
     }
 	
-	 public void printImage2(int[] argb, int width, int height, int align, boolean dither, boolean crop) throws IOException {
+	 public static void printImage2(int[] argb, int width, int height, int align, boolean dither, boolean crop) throws IOException {
 		
 		 
         Object buf = null;
