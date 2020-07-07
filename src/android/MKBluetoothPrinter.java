@@ -697,6 +697,51 @@ public class MKBluetoothPrinter extends CordovaPlugin {
 
     }
 	
+	 private static void ditherImageByFloydSteinberg(int[] grayscale, int width, int height) {
+        int stopXM1 = width - 1;
+        int stopYM1 = height - 1;
+        int[] coef = new int[]{3, 5, 1};
+        int y = 0;
+
+        for(int offs = 0; y < height; ++y) {
+            for(int x = 0; x < width; ++offs) {
+                int v = grayscale[offs];
+                int error;
+                if(v < 128) {
+                    grayscale[offs] = 0;
+                    error = v;
+                } else {
+                    grayscale[offs] = 255;
+                    error = v - 255;
+                }
+
+                int ed;
+                if(x != stopXM1) {
+                    ed = grayscale[offs + 1] + error * 7 / 16;
+                    ed = ed < 0?0:(ed > 255?255:ed);
+                    grayscale[offs + 1] = ed;
+                }
+
+                if(y != stopYM1) {
+                    int i = -1;
+
+                    for(int j = 0; i <= 1; ++j) {
+                        if(x + i >= 0 && x + i < width) {
+                            ed = grayscale[offs + width + i] + error * coef[j] / 16;
+                            ed = ed < 0?0:(ed > 255?255:ed);
+                            grayscale[offs + width + i] = ed;
+                        }
+
+                        ++i;
+                    }
+                }
+
+                ++x;
+            }
+        }
+
+    }
+	
 	 public static void printImage(String image, int width, int height, int align) {
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -713,7 +758,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
 			
             bitmap.recycle();
 
-            printImage2(argb, width, height, align, true);
+            printImage2(argb, width, height, align, true,false);
               outputStream.flush();
             //mCallbackContext.success();
         } catch (Exception e) {
@@ -732,9 +777,9 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         } else if(align >= 0 && align <= 2) {
             if(width >= 1 && height >= 1) {
                 convertARGBToGrayscale(argb, width, height);
-                // if(dither) {
-                    // ditherImageByFloydSteinberg(argb, width, height);
-                // }
+                 if(dither) {
+                     ditherImageByFloydSteinberg(argb, width, height);
+                 }
 
                 // if(crop) {
                     // height = this.cropImage(argb, width, height);
