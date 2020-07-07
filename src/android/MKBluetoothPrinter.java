@@ -17,7 +17,7 @@ import android.graphics.Typeface;
 import android.text.format.Time;
 import android.util.Base64;
 
-import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CallbackContext;compressPic
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
@@ -576,7 +576,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
 
 
-                    bitmap =compressPic(bitmap);
+                    //bitmap =compressPic(bitmap);
 
                     if(bitmap!=null) {
                         //图片的长和框必须是大于24*size
