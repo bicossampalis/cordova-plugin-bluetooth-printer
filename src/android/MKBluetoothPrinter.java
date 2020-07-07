@@ -634,24 +634,8 @@ public class MKBluetoothPrinter extends CordovaPlugin {
      * @param
      */
     public static Bitmap compressPic(Bitmap bitmap) {
-        Bitmap targetBmp =null;
-        try{
-            // 获取这个图片的宽和高
-            int width = bitmap.getWidth();
-            int height = bitmap.getHeight();
-            // 指定调整后的宽度和高度
-            //int newWidth = 240;
-           // int newHeight = 240;
-            int newWidth = bitmap.getWidth();
-             int newHeight = bitmap.getHeight();
-             targetBmp = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
-            Canvas targetCanvas = new Canvas(targetBmp);
-            targetCanvas.drawColor(0xffffffff);
-            targetCanvas.drawBitmap(bitmap, new Rect(0, 0, width, height), new Rect(0, 0, newWidth, newHeight), null);
-        }catch (Exception e){
-
-        }
-        return targetBmp;
+       
+        return bitmap;
     }
 
     /**
