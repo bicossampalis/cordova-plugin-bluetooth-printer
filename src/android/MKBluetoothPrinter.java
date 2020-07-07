@@ -17,7 +17,7 @@ import android.graphics.Typeface;
 import android.text.format.Time;
 import android.util.Base64;
 
-import org.apache.cordova.CallbackContext;compressPic
+//import org.apache.cordova.CallbackContext;compressPic
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
@@ -576,7 +576,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
 
 
-                   Bitmap bitmap2 =compressPic(bitmap);
+                   //Bitmap bitmap2 =compressPic(bitmap);
 
                     if(bitmap!=null) {
                         //图片的长和框必须是大于24*size
@@ -633,26 +633,26 @@ public class MKBluetoothPrinter extends CordovaPlugin {
      *
      * @param
      */
-    public static Bitmap compressPic(Bitmap bitmap) {
-        Bitmap targetBmp =null;
-        try{
-            // 获取这个图片的宽和高
-            int width = bitmap.getWidth();
-            int height = bitmap.getHeight();
-            // 指定调整后的宽度和高度
-            //int newWidth = 240;
-           // int newHeight = 240;
-            int newWidth = bitmap.getWidth();
-             int newHeight = bitmap.getHeight();
-             targetBmp = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
-            Canvas targetCanvas = new Canvas(targetBmp);
-            targetCanvas.drawColor(0xffffffff);
-            targetCanvas.drawBitmap(bitmap, new Rect(0, 0, width, height), new Rect(0, 0, newWidth, newHeight), null);
-        }catch (Exception e){
+    // public static Bitmap compressPic(Bitmap bitmap) {
+        // Bitmap targetBmp =null;
+        // try{
+            // // 获取这个图片的宽和高
+            // int width = bitmap.getWidth();
+            // int height = bitmap.getHeight();
+            // // 指定调整后的宽度和高度
+            // //int newWidth = 240;
+           // // int newHeight = 240;
+            // int newWidth = bitmap.getWidth();
+             // int newHeight = bitmap.getHeight();
+             // targetBmp = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
+            // Canvas targetCanvas = new Canvas(targetBmp);
+            // targetCanvas.drawColor(0xffffffff);
+            // targetCanvas.drawBitmap(bitmap, new Rect(0, 0, width, height), new Rect(0, 0, newWidth, newHeight), null);
+        // }catch (Exception e){
 
-        }
-        return targetBmp;
-    }
+        // }
+        // return targetBmp;
+    // }
 
     /**
      * 灰度图片黑白化，黑色是1，白色是0
