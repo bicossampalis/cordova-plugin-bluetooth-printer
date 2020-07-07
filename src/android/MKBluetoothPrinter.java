@@ -621,7 +621,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                     MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.getCutPaperCmd());
                 }else if(infoType == 9) {
                      text = text.replace("data:image/jpeg;base64,", "").replace("data:image/png;base64,", "");
-                   printImage(text);
+                   MKBluetoothPrinter.printImage(text);
                 }
                 MKBluetoothPrinter.printText("\n");
 
@@ -713,7 +713,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
 			
             bitmap.recycle();
 
-            printImage2(argb, width, height, align, true);
+            MKBluetoothPrinter.printImage2(argb, width, height, align, true);
               outputStream.flush();
             //mCallbackContext.success();
         } catch (Exception e) {
@@ -731,7 +731,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
             throw new NullPointerException("The argb is null");
         } else if(align >= 0 && align <= 2) {
             if(width >= 1 && height >= 1) {
-                convertARGBToGrayscale(argb, width, height);
+                MKBluetoothPrinter.convertARGBToGrayscale(argb, width, height);
                 // if(dither) {
                     // ditherImageByFloydSteinberg(argb, width, height);
                 // }
@@ -781,10 +781,10 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                     //this.write(var14);
                 
             } else {
-                throw new IllegalArgumentException("The size of image is illegal");
+               // throw new IllegalArgumentException("The size of image is illegal");
             }
         } else {
-            throw new IllegalArgumentException("The align is illegal");
+           // throw new IllegalArgumentException("The align is illegal");
         }
     }
 
