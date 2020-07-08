@@ -866,10 +866,10 @@ public class MKBluetoothPrinter extends CordovaPlugin {
 	
 	 public byte[] getBitmapData(Bitmap bitmap, int n, int n2, int n3, int n4) {
         boolean b = false;
-        if (!this.b) {
-            b = (n4 != 0);
-        }
-        return this.a(getBitmapData2(bitmap, n, n2, this.properties.getRecLineWidth(), b, n3));
+        // if (!this.b) {
+            // b = (n4 != 0);
+        // }
+        return a(getBitmapData2(bitmap, n, n2, 384, b, n3));
     }
 	
 	   public static byte[] copyOfRange(final byte[] array, final int n, int n2) {
@@ -956,7 +956,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
 	  private byte[] a(final byte[] src) {
 		   byte[] PAGE_MODE_SET_ABSOLUTE_PRINT_POSITION = { 27, 36 };
 		    byte[] PAGE_MODE_SET_ABSOLUTE_VERTICAL_PRINT_POSITION = { 29, 36 };
-        if (this.b) {
+        //if (this.b) {
             final ByteBuffer allocate;
             (allocate = ByteBuffer.allocate(src.length + PAGE_MODE_SET_ABSOLUTE_PRINT_POSITION.length + 2 + PAGE_MODE_SET_ABSOLUTE_VERTICAL_PRINT_POSITION.length + 2)).put(PAGE_MODE_SET_ABSOLUTE_PRINT_POSITION);
             allocate.put((byte)(0 % 256));
@@ -966,7 +966,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
             allocate.put((byte)(0 / 256));
             allocate.put(src);
             return allocate.array();
-        }
+       // }
         return src;
     }
 	
