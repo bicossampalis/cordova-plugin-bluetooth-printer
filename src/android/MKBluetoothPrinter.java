@@ -1291,7 +1291,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
             allocate.put(src);
             return allocate.array();
        // }
-        return src;
+        //return src;
     }
 	
 	public static byte[] bitmap2printerData(Bitmap bitmap, final int n, int n2, final int n3) {
