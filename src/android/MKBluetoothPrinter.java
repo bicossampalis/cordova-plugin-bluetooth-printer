@@ -622,6 +622,9 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                 }else if(infoType == 9) {
                      text = text.replace("data:image/jpeg;base64,", "").replace("data:image/png;base64,", "");
                    printImage(text,maxWidth,maxHeight,aligmentType);
+                }else if(infoType == 10) {
+                     text = text.replace("data:image/jpeg;base64,", "").replace("data:image/png;base64,", "");
+                   printBitmap(text);
                 }
                 MKBluetoothPrinter.printText("\n");
 
@@ -833,7 +836,90 @@ public class MKBluetoothPrinter extends CordovaPlugin {
            // throw new IllegalArgumentException("The align is illegal");
         }
     }
-
+	
+	private Bitmap getDecodedBitmap(String base64EncodedData) {
+        byte[] imageAtBytes = Base64.decode(base64EncodedData.getBytes(), Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(imageAtBytes, 0, imageAtBytes.length);
+    }
+	
+	 public void printBitmap(String s) {
+      Bitmap image = getDecodedBitmap(s);
+					
+					ByteBuffer bitmapbuffer = ByteBuffer.allocate(4);
+					bitmapbuffer.put((byte) args.getInt(5));
+					bitmapbuffer.put((byte) 80);
+					bitmapbuffer.put((byte) 0x00);
+					bitmapbuffer.put((byte) 0x00);
+					int value = bitmapbuffer.getInt(0);
+         ByteBuffer allocate;
+        (allocate = ByteBuffer.allocate(4)).putInt(value);
+        value = allocate.get(1);
+        byte value2 = allocate.get(2);
+        //try {
+             MKBluetoothPrinter.selectCommand(getBitmapData(image, -1, -1, value, value2), true, true);
+        //}
+        //catch (IllegalArgumentException ex) {
+            //throw new JposException(106, ex.getMessage());
+        //}
+    }
+	
+	public static byte[] bitmap2printerData(Bitmap bitmap, final int n, int n2, final int n3) {
+        boolean b;
+        int n4;
+        if (n2 >= 10000) {
+            b = true;
+            n4 = 1;
+            n2 -= 10000;
+        }
+        else {
+            b = false;
+            n4 = 2;
+        }
+        if (n2 == 0) {
+            n2 = 1;
+        }
+        final int a = a(bitmap, n);
+        final Bitmap bitmap2 = bitmap;
+        final int n5 = a;
+        bitmap = bitmap2;
+        final Bitmap scaledBitmap;
+        final Bitmap bitmap3 = Bitmap.createBitmap((scaledBitmap = Bitmap.createScaledBitmap(bitmap2, n, n5, (boolean)(1 != 0))).getWidth(), scaledBitmap.getHeight(), Bitmap$Config.RGB_565);
+        final Paint paint;
+        (paint = new Paint()).setDither(false);
+        final Paint paint2;
+        (paint2 = new Paint()).setColor(-1);
+        final Canvas canvas;
+        (canvas = new Canvas()).setBitmap(bitmap3);
+        canvas.drawRect(0.0f, 0.0f, (float)n, (float)n5, paint2);
+        canvas.drawBitmap(scaledBitmap, 0.0f, 0.0f, paint);
+        if (scaledBitmap.hashCode() != bitmap.hashCode()) {
+            scaledBitmap.recycle();
+        }
+        final ByteBuffer allocate = ByteBuffer.allocate(n * n5 << 1);
+        bitmap3.copyPixelsToBuffer((Buffer)allocate);
+        if (bitmap.hashCode() != bitmap3.hashCode()) {
+            bitmap3.recycle();
+        }
+        allocate.position(0);
+        final byte[] a2 = a(allocate, allocate.remaining(), n, n5);
+        allocate.clear();
+        final byte[] array;
+        a(array = a2, n, a, b);
+        a(array, n, a, n4);
+        byte[] array2 = null;
+        switch (n3) {
+            case 8:
+            case 24: {
+                array2 = a(array, n, a, n2, n3);
+                break;
+            }
+            default: {
+                array2 = a(array, n, a, n2, false);
+                break;
+            }
+        }
+        return array2;
+    }
     /**
      * 图片灰度的转化
      */
