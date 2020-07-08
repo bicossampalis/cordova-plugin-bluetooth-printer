@@ -534,8 +534,8 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                 } else {
                     MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.BOLD_CANCEL);
                 }
-               MKBluetoothPrinter.selectCommand(getAlignCmd(aligmentType_int));
-                MKBluetoothPrinter.selectCommand(getFontSizeCmd(fontType_int));
+               //MKBluetoothPrinter.selectCommand(getAlignCmd(aligmentType_int));
+                //MKBluetoothPrinter.selectCommand(getFontSizeCmd(fontType_int));
 
                 if (infoType == 0) {
                     MKBluetoothPrinter.printText(text);
