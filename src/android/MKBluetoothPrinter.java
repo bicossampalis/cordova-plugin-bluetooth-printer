@@ -974,7 +974,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
 	
     private static byte[] a(final Bitmap bitmap, final int n, final int n2) {
         final Bitmap scaledBitmap;
-        final Bitmap bitmap2 = Bitmap.createBitmap((scaledBitmap = Bitmap.createScaledBitmap(bitmap, n, n2, (boolean)(1 != 0))).getWidth(), scaledBitmap.getHeight(), Bitmap$Config.RGB_565);
+        final Bitmap bitmap2 = Bitmap.createBitmap((scaledBitmap = Bitmap.createScaledBitmap(bitmap, n, n2, (boolean)(1 != 0))).getWidth(), scaledBitmap.getHeight(), Bitmap.Config.RGB_565);
         final Paint paint;
         (paint = new Paint()).setDither(false);
         final Paint paint2;
@@ -1314,7 +1314,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         final int n5 = a;
         bitmap = bitmap2;
         final Bitmap scaledBitmap;
-        final Bitmap bitmap3 = Bitmap.createBitmap((scaledBitmap = Bitmap.createScaledBitmap(bitmap2, n, n5, (boolean)(1 != 0))).getWidth(), scaledBitmap.getHeight(), Bitmap$Config.RGB_565);
+        final Bitmap bitmap3 = Bitmap.createBitmap((scaledBitmap = Bitmap.createScaledBitmap(bitmap2, n, n5, (boolean)(1 != 0))).getWidth(), scaledBitmap.getHeight(), Bitmap.Config.RGB_565);
         final Paint paint;
         (paint = new Paint()).setDither(false);
         final Paint paint2;
