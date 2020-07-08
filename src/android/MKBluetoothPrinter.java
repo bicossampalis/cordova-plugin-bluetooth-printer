@@ -1,6 +1,7 @@
 
 package cn.sj.cordova.bluetoothprint;
 
+import java.nio.Buffer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -869,7 +870,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         // if (!this.b) {
             // b = (n4 != 0);
         // }
-        return a(getBitmapData2(bitmap, n, n2, 384, b, n3));
+        return a2(getBitmapData2(bitmap, n, n2, 384, b, n3));
     }
 	
 	   public static byte[] copyOfRange(final byte[] array, final int n, int n2) {
@@ -898,7 +899,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
             d = n2;
         }
         if (b) {
-            final ByteBuffer allocate = ByteBuffer.allocate(RunLengthEncoder.a);
+            final ByteBuffer allocate = ByteBuffer.allocate(0);
             switch (n) {
                 case -1: {
                     allocate.put(LEFT_ALIGNMENT);
@@ -951,9 +952,332 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         return allocate2.array();
     }
 	
-	  
+    private static int a(final int n) {
+        return ((n & 0xF800) >> 8) + 4;
+    }
+    
+    private static int b(final int n) {
+        return ((n & 0x7E0) >> 3) + 2;
+    }
+    
+    private static int c(final int n) {
+        return ((n & 0x1F) << 3) + 4;
+    }
+    
+    private static int a(final byte b, final byte b2) {
+        return (b & 0xFF) << 8 | (b2 & 0xFF);
+    }
+    
+    private static int a(final Bitmap bitmap, final int n) {
+        return (int)(n / (double)bitmap.getWidth() * bitmap.getHeight());
+    }
 	
-	  private byte[] a(final byte[] src) {
+    private static byte[] a(final Bitmap bitmap, final int n, final int n2) {
+        final Bitmap scaledBitmap;
+        final Bitmap bitmap2 = Bitmap.createBitmap((scaledBitmap = Bitmap.createScaledBitmap(bitmap, n, n2, (boolean)(1 != 0))).getWidth(), scaledBitmap.getHeight(), Bitmap$Config.RGB_565);
+        final Paint paint;
+        (paint = new Paint()).setDither(false);
+        final Paint paint2;
+        (paint2 = new Paint()).setColor(-1);
+        final Canvas canvas;
+        (canvas = new Canvas()).setBitmap(bitmap2);
+        canvas.drawRect(0.0f, 0.0f, (float)n, (float)n2, paint2);
+        canvas.drawBitmap(scaledBitmap, 0.0f, 0.0f, paint);
+        if (scaledBitmap.hashCode() != bitmap.hashCode()) {
+            scaledBitmap.recycle();
+        }
+        final ByteBuffer allocate = ByteBuffer.allocate(n * n2 << 1);
+        bitmap2.copyPixelsToBuffer((Buffer)allocate);
+        if (bitmap.hashCode() != bitmap2.hashCode()) {
+            bitmap2.recycle();
+        }
+        allocate.position(0);
+        final byte[] a = a(allocate, allocate.remaining(), n, n2);
+        allocate.clear();
+        return a;
+    }
+    
+    private static byte[] a(final ByteBuffer byteBuffer, final int n, final int n2, int i) {
+        final byte[] array = new byte[n2 * i << 2];
+        i = 0;
+        int n3 = 0;
+        while (i < n) {
+            final int n5;
+            final int n4 = (((n5 = ((byteBuffer.get(i + 1) & 0xFF) << 8 | (byteBuffer.get(i) & 0xFF))) & 0xF800) >> 8) + 4;
+            final int n6 = ((n5 & 0x7E0) >> 3) + 2;
+            final int n7 = ((n5 & 0x1F) << 3) + 4;
+            array[n3++] = (byte)n4;
+            array[n3++] = (byte)n6;
+            array[n3++] = (byte)n7;
+            array[n3++] = -1;
+            i += 2;
+        }
+        return array;
+    }
+    
+    private static void a(final byte[] array, final int n, final int n2, final boolean b) {
+        final int[] array2 = new int[256];
+        for (int i = 0; i < n2; ++i) {
+            for (int j = 0; j < n; ++j) {
+                final int n3 = 4 * (j + n * i);
+                final int n4 = (int)(0.2125 * (array[n3] & 0xFF) + 0.7154 * (array[n3 + 1] & 0xFF) + 0.0721 * (array[n3 + 2] & 0xFF));
+                array[n3 + 1] = (array[n3] = (byte)n4);
+                array[n3 + 2] = array[n3];
+                final int[] array3 = array2;
+                final int n5 = n4 & 0xFF;
+                ++array3[n5];
+            }
+        }
+        if (b) {
+            final float n6 = (float)(255.0 / (n * n2));
+            for (int k = 1; k < 256; ++k) {
+                final int[] array4 = array2;
+                final int n7 = k;
+                array4[n7] += array2[k - 1];
+            }
+            for (int l = 0; l < n2; ++l) {
+                for (int n8 = 0; n8 < n; ++n8) {
+                    final int n9 = 4 * (n8 + n * l);
+                    final byte b2 = (byte)Math.round(array2[array[n9] & 0xFF] * n6);
+                    array[n9 + 1] = (array[n9] = (byte)((b2 > 255) ? -1 : ((byte)b2)));
+                    array[n9 + 2] = array[n9];
+                }
+            }
+        }
+    }
+    
+    private static int a(final int n, final int n2) {
+        switch (n2) {
+            case 1: {
+                if (n < 128) {
+                    return 0;
+                }
+                return 255;
+            }
+            case 2: {
+                return ((byte)(n / 64) << 6) + 32;
+            }
+            case 3: {
+                return ((byte)(n / 32) << 5) + 16;
+            }
+            default: {
+                if (n < 128) {
+                    return 0;
+                }
+                return 255;
+            }
+        }
+    }
+    
+    private static void a(final byte[] array, final int n, final int n2, final int n3) {
+        for (int i = 0; i < n2; ++i) {
+            for (int j = 0; j < n; ++j) {
+                final int n4 = 4 * (j + n * i);
+                final int n6;
+                final int n5 = n6 = (array[n4] & 0xFF);
+                int n7 = 0;
+                switch (n3) {
+                    case 1: {
+                        n7 = ((n6 < 128) ? 0 : 255);
+                        break;
+                    }
+                    case 2: {
+                        n7 = ((byte)(n6 / 64) << 6) + 32;
+                        break;
+                    }
+                    case 3: {
+                        n7 = ((byte)(n6 / 32) << 5) + 16;
+                        break;
+                    }
+                    default: {
+                        n7 = ((n6 < 128) ? 0 : 255);
+                        break;
+                    }
+                }
+                final int n8 = n7;
+                final int n9 = n5 - n8;
+                array[n4] = (byte)n8;
+                if (j + 1 < n) {
+                    final double a;
+                    if ((a = (array[4 * (j + 1 + n * i)] & 0xFF) + 0.5375 * n9) < 0.0) {
+                        array[4 * (j + 1 + n * i)] = 0;
+                    }
+                    else if (a > 0.0 && a < 255.0) {
+                        array[4 * (j + 1 + n * i)] = (byte)Math.round(a);
+                    }
+                    else {
+                        array[4 * (j + 1 + n * i)] = -1;
+                    }
+                }
+                if (i + 1 < n2 && j - 1 > 0) {
+                    final double a2;
+                    if ((a2 = (array[4 * (j - 1 + n * (i + 1))] & 0xFF) + 0.1875 * n9) < 0.0) {
+                        array[4 * (j - 1 + n * (i + 1))] = 0;
+                    }
+                    else if (a2 >= 0.0 && a2 < 255.0) {
+                        array[4 * (j - 1 + n * (i + 1))] = (byte)Math.round(a2);
+                    }
+                    else {
+                        array[4 * (j - 1 + n * (i + 1))] = -1;
+                    }
+                }
+                if (i + 1 < n2) {
+                    final double a3;
+                    if ((a3 = (array[4 * (j + n * (i + 1))] & 0xFF) + 0.3125 * n9) < 0.0) {
+                        array[4 * (j + n * (i + 1))] = 0;
+                    }
+                    else if (a3 >= 0.0 && a3 < 255.0) {
+                        array[4 * (j + n * (i + 1))] = (byte)Math.round(a3);
+                    }
+                    else {
+                        array[4 * (j + n * (i + 1))] = -1;
+                    }
+                }
+                if (i + 1 < n2 && j + 1 < n) {
+                    final double a4;
+                    if ((a4 = (array[4 * (j + 1 + n * (i + 1))] & 0xFF) + 0.0625 * n9) < 0.0) {
+                        array[4 * (j + 1 + n * (i + 1))] = 0;
+                    }
+                    else if (a4 >= 0.0 && a4 < 255.0) {
+                        array[4 * (j + 1 + n * (i + 1))] = (byte)Math.round(a4);
+                    }
+                    else {
+                        array[4 * (j + 1 + n * (i + 1))] = -1;
+                    }
+                }
+                array[4 * (j + n * i)] = (byte)n8;
+                array[4 * (j + n * i) + 1] = (byte)n8;
+                array[4 * (j + n * i) + 2] = (byte)n8;
+            }
+        }
+    }
+    
+    private static byte a(final byte b, final byte b2, final byte b3, int n) {
+        n = n * 255 / 100;
+        if ((b & 0xFF) > n && (b2 & 0xFF) > n && (b3 & 0xFF) > n) {
+            return 0;
+        }
+        return 1;
+    }
+    
+    private static byte[] a(final byte[] array, final int n, final int n2, final int n3, final int n4) {
+        final byte[] array2 = new byte[(5 + n * (n4 / 8) + 3) * (n2 / n4 + ((n2 % n4 != 0) ? 1 : 0))];
+        final byte[] array3 = new byte[n4];
+        int i = 0;
+        int n5 = 0;
+        while (i < n2) {
+            array2[n5++] = 27;
+            array2[n5++] = 42;
+            if (n4 == 24) {
+                array2[n5++] = 33;
+            }
+            else if (n4 == 8) {
+                array2[n5++] = 1;
+            }
+            array2[n5++] = (byte)(n % 256);
+            array2[n5++] = (byte)(n / 256);
+            for (int j = 0; j < n; ++j) {
+                for (int k = 0; k < n4; ++k) {
+                    if (i + k < n2) {
+                        final byte[] array4 = array3;
+                        final int n6 = k;
+                        final byte b = array[4 * (j + n * (i + k))];
+                        final byte b2 = array[4 * (j + n * (i + k)) + 1];
+                        final byte b3 = array[4 * (j + n * (i + k)) + 2];
+                        final byte b4 = b2;
+                        final byte b5 = b;
+                        final int n7 = n3 * 255 / 100;
+                        array4[n6] = (byte)(((b5 & 0xFF) <= n7 || (b4 & 0xFF) <= n7 || (b3 & 0xFF) <= n7) ? 1 : 0);
+                    }
+                    else {
+                        array3[k] = 0;
+                    }
+                }
+                for (int l = 0; l < n4 / 8; ++l) {
+                    int n8 = 0;
+                    if (array3[0 + (l << 3)] == 1) {
+                        n8 = 128;
+                    }
+                    if (array3[1 + (l << 3)] == 1) {
+                        n8 |= 0x40;
+                    }
+                    if (array3[2 + (l << 3)] == 1) {
+                        n8 |= 0x20;
+                    }
+                    if (array3[3 + (l << 3)] == 1) {
+                        n8 |= 0x10;
+                    }
+                    if (array3[4 + (l << 3)] == 1) {
+                        n8 |= 0x8;
+                    }
+                    if (array3[5 + (l << 3)] == 1) {
+                        n8 |= 0x4;
+                    }
+                    if (array3[6 + (l << 3)] == 1) {
+                        n8 |= 0x2;
+                    }
+                    if (array3[7 + (l << 3)] == 1) {
+                        n8 |= 0x1;
+                    }
+                    array2[n5++] = (byte)n8;
+                }
+            }
+            array2[n5++] = 27;
+            array2[n5++] = 74;
+            if (n4 == 24) {
+                array2[n5++] = 24;
+            }
+            else if (n4 == 8) {
+                array2[n5++] = 8;
+            }
+            i += n4;
+        }
+        return array2;
+    }
+    
+    private static int a(final byte b) {
+        return b & 0xFF;
+	}
+	
+	 private static int d(final int n) {
+        return n / 8 + ((n % 8 != 0) ? 1 : 0);
+    }
+    
+    private static byte[] a(final byte[] array, final int n, final int n2, final int n3, final boolean b) {
+        final byte[] array2 = new byte[d(n) * n2];
+        int n4 = 0;
+        for (int i = 0; i < n2; ++i) {
+            int n5 = 0;
+            for (int j = 0; j < n; ++j) {
+                final int n6 = 4 * (j + n * i);
+                final int n7 = array[n6] & 0xFF;
+                final int n8 = array[n6 + 1] & 0xFF;
+                final int n9 = array[n6 + 2] & 0xFF;
+                final int n10 = (int)(n3 * 255.0 / 100.0);
+                int n11;
+                if (n3 != 0 && n7 >= n10 && n8 >= n10 && n9 >= n10) {
+                    n11 = 0;
+                }
+                else {
+                    n11 = 1;
+                }
+                array2[n4] = (byte)((array2[n4] & 0xFF) + (n11 << 7 - j % 8));
+                if (n5 == 7) {
+                    ++n4;
+                    n5 = 0;
+                }
+                else {
+                    ++n5;
+                }
+            }
+            if (n5 != 0) {
+                ++n4;
+            }
+        }
+        return array2;
+    }
+	
+	  private byte[] a2(final byte[] src) {
 		   byte[] PAGE_MODE_SET_ABSOLUTE_PRINT_POSITION = { 27, 36 };
 		    byte[] PAGE_MODE_SET_ABSOLUTE_VERTICAL_PRINT_POSITION = { 29, 36 };
         //if (this.b) {
