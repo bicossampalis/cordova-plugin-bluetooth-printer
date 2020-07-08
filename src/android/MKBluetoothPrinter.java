@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -846,7 +847,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
       Bitmap image = getDecodedBitmap(s);
 					
 					ByteBuffer bitmapbuffer = ByteBuffer.allocate(4);
-					bitmapbuffer.put((byte) args.getInt(5));
+					bitmapbuffer.put((byte) 2);
 					bitmapbuffer.put((byte) 80);
 					bitmapbuffer.put((byte) 0x00);
 					bitmapbuffer.put((byte) 0x00);
@@ -856,11 +857,117 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         value = allocate.get(1);
         byte value2 = allocate.get(2);
         //try {
-             MKBluetoothPrinter.selectCommand(getBitmapData(image, -1, -1, value, value2), true, true);
+             MKBluetoothPrinter.selectCommand(getBitmapData(image, -1, -1, value, value2));
         //}
         //catch (IllegalArgumentException ex) {
             //throw new JposException(106, ex.getMessage());
         //}
+    }
+	
+	 public byte[] getBitmapData(Bitmap bitmap, int n, int n2, int n3, int n4) {
+        boolean b = false;
+        if (!this.b) {
+            b = (n4 != 0);
+        }
+        return this.a(getBitmapData2(bitmap, n, n2, this.properties.getRecLineWidth(), b, n3));
+    }
+	
+	   public static byte[] copyOfRange(final byte[] array, final int n, int n2) {
+        if (n > n2) {
+            //throw new IllegalArgumentException();
+        }
+        final int length = array.length;
+        if (n < 0 || n > length) {
+           // throw new ArrayIndexOutOfBoundsException();
+        }
+        final int min = Math.min(n2 -= n, length - n);
+        final byte[] array2 = new byte[n2];
+        System.arraycopy(array, n, array2, 0, min);
+        return array2;
+    }
+	
+	  public static byte[] getBitmapData2(final Bitmap bitmap, int d, final int n, final int n2, final boolean b, int a) {
+		   byte[] LEFT_ALIGNMENT = { 27, 97, 0 };
+		   byte[] CENTER_ALIGNMENT = { 27, 97, 1 };
+		    byte[] RIGHT_ALIGNMENT = { 27, 97, 2 };
+			byte[] PRINT_RASTER_BIT_IMAGE_NORMAL = { 29, 118, 48, 0 };
+        if (bitmap == null) {
+            //throw new IllegalArgumentException("fileName was not found");
+        }
+        if (d < 0 || d > n2) {
+            d = n2;
+        }
+        if (b) {
+            final ByteBuffer allocate = ByteBuffer.allocate(RunLengthEncoder.a);
+            switch (n) {
+                case -1: {
+                    allocate.put(LEFT_ALIGNMENT);
+                    break;
+                }
+                case -2: {
+                    allocate.put(CENTER_ALIGNMENT);
+                    break;
+                }
+                case -3: {
+                    allocate.put(RIGHT_ALIGNMENT);
+                    break;
+                }
+                default: {
+                    //throw new IllegalArgumentException("Alignment is invalid or too big");
+                }
+            }
+            final byte[] bitmap2printerData = bitmap2printerData(bitmap, d, a, 0);
+            a = a(bitmap, d);
+           // RunLengthEncoder.encode(bitmap2printerData, d, a, allocate);
+            return copyOfRange(allocate.array(), 0, allocate.position());
+        }
+        final byte[] bitmap2printerData2 = bitmap2printerData(bitmap, d, a, 0);
+        final ByteBuffer allocate2 = ByteBuffer.allocate(LEFT_ALIGNMENT.length + PRINT_RASTER_BIT_IMAGE_NORMAL.length + 4 + bitmap2printerData2.length);
+        switch (n) {
+            case -1: {
+                allocate2.put(LEFT_ALIGNMENT);
+                break;
+            }
+            case -2: {
+                allocate2.put(CENTER_ALIGNMENT);
+                break;
+            }
+            case -3: {
+                allocate2.put(RIGHT_ALIGNMENT);
+                break;
+            }
+            default: {
+               // throw new IllegalArgumentException("Alignment is invalid or too big");
+            }
+        }
+        final int a2 = a(bitmap, d);
+        d = d(d);
+        allocate2.put(PRINT_RASTER_BIT_IMAGE_NORMAL);
+        allocate2.put((byte)(d % 256));
+        allocate2.put((byte)(d / 256));
+        allocate2.put((byte)(a2 % 256));
+        allocate2.put((byte)(a2 / 256));
+        allocate2.put(bitmap2printerData2);
+        return allocate2.array();
+    }
+	
+	  
+	
+	  private byte[] a(final byte[] src) {
+		   byte[] PAGE_MODE_SET_ABSOLUTE_PRINT_POSITION = { 27, 36 };
+		    byte[] PAGE_MODE_SET_ABSOLUTE_VERTICAL_PRINT_POSITION = { 29, 36 };
+        if (this.b) {
+            final ByteBuffer allocate;
+            (allocate = ByteBuffer.allocate(src.length + PAGE_MODE_SET_ABSOLUTE_PRINT_POSITION.length + 2 + PAGE_MODE_SET_ABSOLUTE_VERTICAL_PRINT_POSITION.length + 2)).put(PAGE_MODE_SET_ABSOLUTE_PRINT_POSITION);
+            allocate.put((byte)(0 % 256));
+            allocate.put((byte)(0 / 256));
+            allocate.put(PAGE_MODE_SET_ABSOLUTE_VERTICAL_PRINT_POSITION);
+            allocate.put((byte)(0 % 256));
+            allocate.put((byte)(0 / 256));
+            allocate.put(src);
+            return allocate.array();
+        }
+        return src;
     }
 	
 	public static byte[] bitmap2printerData(Bitmap bitmap, final int n, int n2, final int n3) {
