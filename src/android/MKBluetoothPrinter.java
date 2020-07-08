@@ -748,13 +748,14 @@ public class MKBluetoothPrinter extends CordovaPlugin {
             options.inScaled = false;
             byte[] decodedByte = Base64.decode(image, 0);
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+			bitmap =compressPic(bitmap);
             final int imgWidth = bitmap.getWidth();
             final int imgHeight = bitmap.getHeight();
             final int[] argb = new int[imgWidth * imgHeight];
 
             bitmap.getPixels(argb, 0, imgWidth, 0, 0, imgWidth, imgHeight);
 			
-			//bitmap =compressPic(bitmap);
+		
 			
             bitmap.recycle();
 
