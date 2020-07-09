@@ -430,61 +430,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                        MKBluetoothPrinter.printText("\n");
                        MKBluetoothPrinter.printText("\n");
                    }
-                   //结束循环时
-                   // MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.getCutPaperCmd());
-//                     JSONObject dataJson = new JSONObject(sendData);
-//                   ///获取globalDatatop数据
-//                   JSONArray top_array = dataJson.optJSONArray("globalDatatop");
-//                   //获取globalDatafoot数据
-//                   JSONArray foot_array = dataJson.optJSONArray("globalDatafoot");
-//                   //获取personsData数据
-//                   JSONArray persons_object = dataJson.optJSONArray("personsData");
-//
-//
-//                    MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.RESET);
-//                   MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.LINE_SPACING_DEFAULT);
-//
-//                   if (persons_object != null && persons_object.length() > 0) {
-//                       for (int j = 0; j < persons_object.length(); j++) {
-//                           JSONObject person = (JSONObject) persons_object.get(j);
-//
-//
-//                           if(person!=null) {
-//                               JSONArray person_arr = person.optJSONArray("person");
-//                               if (person_arr != null && person_arr.length() > 0) {
-//
-//
-//                                           //循环打印头部
-//                                           if (top_array != null && top_array.length() > 0) {
-//                                               for (int m = 0; m < top_array.length(); m++) {
-//                                                   JSONObject jsonData = (JSONObject) top_array.get(m);
-//                                                    sendprint(jsonData);
-//                                               }
-//                                           }
-//                                           for (int n = 0; n < person_arr.length(); n++) {
-//                                               JSONObject jsonData = (JSONObject) person_arr.get(n);
-//                                               sendprint(jsonData);
-//                                           }
-//
-//
-//                                           //循环打印底部部
-//                                           if (foot_array != null && foot_array.length() > 0) {
-//                                               for (int h = 0; h < foot_array.length(); h++) {
-//                                                   JSONObject jsonData = (JSONObject) foot_array.get(h);
-//                                                    sendprint(jsonData);
-//                                               }
-//                                           }
-//                                           MKBluetoothPrinter.printText("\n");
-//                                           MKBluetoothPrinter.printText("\n");
-//
-//                                           //结束循环时
-//                                           MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.getCutPaperCmd());
-//
-//
-//                               }
-//                           }
-//                       }
-//                   }
+                  
                }
                 callbackContext.success("打印成功！");
             } catch (Exception e) {
@@ -507,7 +453,8 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                 int aligmentType = jsonData.optInt("aligmentType");
                 int isTitle = jsonData.optInt("isTitle");
                 int maxWidth = jsonData.optInt("maxWidth");
-				 int maxHeight = jsonData.optInt("maxHeight");
+				int maxHeight = jsonData.optInt("maxHeight");
+				int rectangle = jsonData.optInt("rectangle");
                 int qrCodeSize = jsonData.optInt("qrCodeSize");
                 JSONArray textArray = jsonData.optJSONArray("textArray");
 
@@ -517,19 +464,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
 
                 int fontType_int = fontType;
                 int aligmentType_int = aligmentType;
-                //                      int fontType_int =0;
-                //                       int aligmentType_int =0;
-                //                       try{
-                //                           fontType_int =Integer.parseInt(fontType);
-                //                       }catch (Exception e){
-                //
-                //                       }
-                //
-                //                       try{
-                //                           aligmentType_int =Integer.parseInt(aligmentType);
-                //                       }catch (Exception e){
-                //
-                //                       }
+               
 
                 if (isTitle == 1) {
                     MKBluetoothPrinter.selectCommand(MKBluetoothPrinter.BOLD);
@@ -589,28 +524,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                         MKBluetoothPrinter.selectCommand(draw2PxPoint);
                     }
 
-                    //图片的长和框必须是大于24*size
-                //  byte[] draw2PxPoint = PicFromPrintUtils.draw2PxPoint(bitmap);
-                    //发送打印图片前导指令
-
-                 // MKBluetoothPrinter.selectCommand(draw2PxPoint);
-
-
-
-
-                    //MKBluetoothPrinter.selectCommand(draw2PxPoint);
-                    //InputStream fin = Bitmap2IS(bitmap);
-                   //byte[] buffer = getReadBitMapBytes(bitmap);
-                    //发送打印图片前导指令
-                   //byte[] start = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1B,
-                   //       0x40, 0x1B, 0x33, 0x00 };
-                 //  MKBluetoothPrinter.selectCommand(start);
-                   //MKBluetoothPrinter.selectCommandByte(buffer);
-                      // 发送结束指令
-                  //  byte[] end = { 0x1d, 0x4c, 0x1f, 0x00 };
-                  //  MKBluetoothPrinter.selectCommand(end);
-                    //MKBluetoothPrinter.selectCommand(bitmapArray);
-                    // 发送结束指令
+                 
 
                 } else if (infoType == 5) {
                     MKBluetoothPrinter.printText(printSeperatorLine());
@@ -626,7 +540,7 @@ public class MKBluetoothPrinter extends CordovaPlugin {
                    printImage(text,maxWidth,maxHeight,aligmentType);
                 }else if(infoType == 10) {
                      text = text.replace("data:image/jpeg;base64,", "").replace("data:image/png;base64,", "");
-                   printBitmap(text);
+                   printBitmap(text,maxWidth,aligmentType,rectangle);
                 }
                 MKBluetoothPrinter.printText("\n");
 
@@ -844,42 +758,49 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         return BitmapFactory.decodeByteArray(imageAtBytes, 0, imageAtBytes.length);
     }
 	
-	 public void printBitmap(String s) {
+	 public void printBitmap(String s, int width,int align,int rectangle)  throws JSONException {
       Bitmap image = getDecodedBitmap(s);
 					
-					ByteBuffer bitmapbuffer = ByteBuffer.allocate(4);
-					bitmapbuffer.put((byte) 2);
-					bitmapbuffer.put((byte) 80);
-					bitmapbuffer.put((byte) 0x00);
-					bitmapbuffer.put((byte) 0x00);
-					int value = bitmapbuffer.getInt(0);
+		ByteBuffer bitmapbuffer = ByteBuffer.allocate(4);
+		bitmapbuffer.put((byte) 2);
+		bitmapbuffer.put((byte) 80);
+		bitmapbuffer.put((byte) 0x00);
+		bitmapbuffer.put((byte) 0x00);
+		int value = bitmapbuffer.getInt(0);
          ByteBuffer allocate;
         (allocate = ByteBuffer.allocate(4)).putInt(value);
         value = allocate.get(1);
         byte value2 = allocate.get(2);
-        //try {
-             MKBluetoothPrinter.selectCommand(getBitmapData(image, -1, -1, value, value2));
-        //}
-        //catch (IllegalArgumentException ex) {
-            //throw new JposException(106, ex.getMessage());
-        //}
+		if(width==null)
+			width = -1;
+		if(align==null)
+			align = -1;
+        try {
+             MKBluetoothPrinter.selectCommand(getBitmapData(image, width, align, value, value2,rectangle));
+        }
+       catch (Exception e) {
+            e.printStackTrace();
+            callbackContext.success("0");
+        }
     }
 	
-	 public byte[] getBitmapData(Bitmap bitmap, int n, int n2, int n3, int n4) {
+	 public byte[] getBitmapData(Bitmap bitmap, int n, int n2, int n3, int n4,int rectangle) {
         boolean b = false;
         // if (!this.b) {
             // b = (n4 != 0);
         // }
-        return a2(getBitmapData2(bitmap, n, n2, 384, b, n3));
+		if(rectangle== null)
+			rectangle=384;
+        return a2(getBitmapData2(bitmap, n, n2, rectangle, b, n3));
     }
 	
-	   public static byte[] copyOfRange(final byte[] array, final int n, int n2) {
+	   public static byte[] copyOfRange(final byte[] array, final int n, int n2){
         if (n > n2) {
-            //throw new IllegalArgumentException();
+           callbackContext.error("Print Failed");
         }
         final int length = array.length;
         if (n < 0 || n > length) {
-           // throw new ArrayIndexOutOfBoundsException();
+           callbackContext.error("Print Failed");
         }
         final int min = Math.min(n2 -= n, length - n);
         final byte[] array2 = new byte[n2];
@@ -887,13 +808,13 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         return array2;
     }
 	
-	  public static byte[] getBitmapData2(final Bitmap bitmap, int d, final int n, final int n2, final boolean b, int a) {
+	  public static byte[] getBitmapData2(final Bitmap bitmap, int d, final int n, final int n2, final boolean b, int a)  {
 		   byte[] LEFT_ALIGNMENT = { 27, 97, 0 };
 		   byte[] CENTER_ALIGNMENT = { 27, 97, 1 };
 		    byte[] RIGHT_ALIGNMENT = { 27, 97, 2 };
 			byte[] PRINT_RASTER_BIT_IMAGE_NORMAL = { 29, 118, 48, 0 };
         if (bitmap == null) {
-            //throw new IllegalArgumentException("fileName was not found");
+            callbackContext.error("Print Failed");
         }
         if (d < 0 || d > n2) {
             d = n2;
@@ -901,20 +822,20 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         if (b) {
             final ByteBuffer allocate = ByteBuffer.allocate(0);
             switch (n) {
-                case -1: {
+                case 0: {
                     allocate.put(LEFT_ALIGNMENT);
                     break;
                 }
-                case -2: {
+                case 1: {
                     allocate.put(CENTER_ALIGNMENT);
                     break;
                 }
-                case -3: {
+                case 2: {
                     allocate.put(RIGHT_ALIGNMENT);
                     break;
                 }
                 default: {
-                    //throw new IllegalArgumentException("Alignment is invalid or too big");
+                     callbackContext.error("Print Failed");
                 }
             }
             final byte[] bitmap2printerData = bitmap2printerData(bitmap, d, a, 0);
@@ -925,20 +846,20 @@ public class MKBluetoothPrinter extends CordovaPlugin {
         final byte[] bitmap2printerData2 = bitmap2printerData(bitmap, d, a, 0);
         final ByteBuffer allocate2 = ByteBuffer.allocate(LEFT_ALIGNMENT.length + PRINT_RASTER_BIT_IMAGE_NORMAL.length + 4 + bitmap2printerData2.length);
         switch (n) {
-            case -1: {
+            case 0: {
                 allocate2.put(LEFT_ALIGNMENT);
                 break;
             }
-            case -2: {
+            case 1: {
                 allocate2.put(CENTER_ALIGNMENT);
                 break;
             }
-            case -3: {
+            case 2: {
                 allocate2.put(RIGHT_ALIGNMENT);
                 break;
             }
             default: {
-               // throw new IllegalArgumentException("Alignment is invalid or too big");
+                callbackContext.error("Print Failed");
             }
         }
         final int a2 = a(bitmap, d);

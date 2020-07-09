@@ -110,6 +110,7 @@ if (typeof BTPInfoType == "undefined"){
     BTPInfoType.spaceLine       = 6;
     BTPInfoType.footer          = 7;
     BTPInfoType.cutpage         = 8;
+	BTPInfoType.bitmap         = 10;
 }
 //  字号大小 default:smalle
 if (typeof BTPFontType == "undefined"){
@@ -230,6 +231,16 @@ PrinterInfoHelper.prototype.appendImage = function (text, maxWidth, alignment){
     infoModel.text = text;
     infoModel.aligmentType = alignment;
     infoModel.maxWidth = maxWidth;
+    _printerInfos.push(infoModel);
+}
+
+PrinterInfoHelper.prototype.appendBitmap = function (text, maxWidth, alignment,rectangle){
+    var infoModel = new Object();
+    infoModel.infoType = BTPInfoType.bitmap;
+    infoModel.text = text;
+    infoModel.aligmentType = alignment;
+    infoModel.maxWidth = maxWidth;
+	infoModel.rectangle = rectangle;
     _printerInfos.push(infoModel);
 }
 
