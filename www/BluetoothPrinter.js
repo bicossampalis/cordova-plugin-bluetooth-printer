@@ -235,6 +235,12 @@ PrinterInfoHelper.prototype.appendImage = function (text, maxWidth, alignment){
 }
 
 PrinterInfoHelper.prototype.appendBitmap = function (text, maxWidth, alignment,rectangle){
+	if(maxWidth==null || maxWidth == undefined)
+		maxWidth = -1;
+	if(alignment==null || alignment == undefined)
+		alignment = -1;
+	if(rectangle==null || rectangle == undefined)
+		rectangle = 384;
     var infoModel = new Object();
     infoModel.infoType = BTPInfoType.bitmap;
     infoModel.text = text;
