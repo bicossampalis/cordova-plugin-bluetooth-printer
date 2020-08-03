@@ -6,9 +6,9 @@
 //  Copyright © 2016年 Halley. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "CDVWKWebViewEngine.h"
 
-@interface UIWebView (UIImage)
+@interface WKWebView (UIImage)
 
 /**
  *  获取当前加载的网页的截图

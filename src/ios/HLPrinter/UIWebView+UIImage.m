@@ -10,7 +10,7 @@
 
 #import "UIWebView+UIImage.h"
 
-@implementation UIWebView (UIImage)
+@implementation WKWebView (UIImage)
 
 /**
  *  获取当前加载的网页的截图

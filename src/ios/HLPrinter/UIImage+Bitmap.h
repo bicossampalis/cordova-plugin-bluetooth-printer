@@ -6,7 +6,7 @@
 //  Copyright © 2016年 Halley. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "CDVWKWebViewEngine.h"
 
 typedef NS_ENUM(NSInteger,BitPixels) {
     BPAlpha = 0,
